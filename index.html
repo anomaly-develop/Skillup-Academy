@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skillup Academy — platform kursus IT dan pendaftaran mentor berbasis web. Kelas web development, data science, AI, cybersecurity, dan lainnya.">
+  <title>Skillup Academy — Platform Kursus IT &amp; Pendaftaran Mentor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F7F5EF',
+            ink: '#14171F',
+            brand: '#0F766E',
+            accent: '#E85D04',
+            line: '#E3DFD5',
+            danger: '#B42318'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          },
+          maxWidth: { container: '72rem' }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer components {
+      .container-x { @apply mx-auto w-full max-w-container px-5; }
+      .kicker { @apply font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand; }
+      .btn { @apply inline-flex cursor-pointer items-center justify-center gap-2 px-5 py-3 text-sm font-semibold transition-colors; }
+      .btn-primary { @apply bg-ink text-paper hover:bg-brand; }
+      .btn-ghost { @apply border border-ink bg-transparent text-ink hover:bg-ink hover:text-paper; }
+      .btn-accent { @apply bg-accent text-ink hover:bg-[#cf5203]; }
+      .btn-sm { @apply px-3 py-2 text-xs; }
+      .input { @apply w-full border border-ink/20 bg-white px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-brand focus:ring-2 focus:ring-brand/30; }
+      .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/70; }
+      .helper { @apply mt-1 block text-xs text-ink/50; }
+      .err { @apply mt-1 hidden text-xs font-medium text-danger; }
+      .card { @apply border border-line bg-white; }
+      .chip { @apply inline-flex items-center gap-1.5 border border-line bg-white px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink/70; }
+      .stat-num { @apply font-mono text-3xl font-semibold text-paper; }
+      .stat-label { @apply text-xs text-paper/60; }
+    }
+  </style>
+</head>
+<body class="bg-paper font-sans text-ink antialiased">
+
+  <a href="#beranda" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-paper">Lompat ke konten utama</a>
+
+  <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+    <div class="container-x flex h-16 items-center justify-between">
+      <a href="#beranda" class="flex items-baseline gap-2">
+        <span class="text-lg font-extrabold tracking-tight">SKILLUP</span>
+        <span class="font-mono text-xs uppercase tracking-[0.25em] text-ink/50">Academy</span>
+      </a>
+
+      <nav aria-label="Navigasi utama" class="hidden items-center gap-7 md:flex">
+        <a href="#beranda" class="text-sm font-semibold text-ink/70 transition-colors hover:text-ink">Beranda</a>
+        <a href="#kategori" class="text-sm font-semibold text-ink/70 transition-colors hover:text-ink">Kategori</a>
+        <a href="#kelas" class="text-sm font-semibold text-ink/70 transition-colors hover:text-ink">Kelas</a>
+        <a href="#mentor" class="text-sm font-semibold text-ink/70 transition-colors hover:text-ink">Mentor</a>
+        <a href="#daftar-mentor" class="text-sm font-semibold text-ink/70 transition-colors hover:text-ink">Jadi Mentor</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#daftar-kelas" class="btn btn-primary btn-sm hidden sm:inline-flex">Daftar Kelas</a>
+        <button id="btn-menu" type="button" class="inline-flex h-10 w-10 items-center justify-center border border-line md:hidden" aria-controls="nav-mobile" aria-expanded="false" aria-label="Buka menu navigasi">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="nav-mobile" class="hidden border-t border-line md:hidden">
+      <nav aria-label="Navigasi seluler" class="container-x flex flex-col py-4">
+        <a href="#beranda" class="border-b border-line py-3 text-sm font-semibold">Beranda</a>
+        <a href="#kategori" class="border-b border-line py-3 text-sm font-semibold">Kategori</a>
+        <a href="#kelas" class="border-b border-line py-3 text-sm font-semibold">Kelas</a>
+        <a href="#mentor" class="border-b border-line py-3 text-sm font-semibold">Mentor</a>
+        <a href="#daftar-mentor" class="border-b border-line py-3 text-sm font-semibold">Jadi Mentor</a>
+        <a href="#daftar-kelas" class="btn btn-primary mt-4">Daftar Kelas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="konten">
+
+    <!-- ============ HERO ============ -->
+    <section id="beranda" class="border-b border-line">
+      <div class="container-x grid gap-10 py-16 md:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div>
+          <p class="kicker mb-5">Platform Kursus IT &amp; Mentor</p>
+          <h1 class="max-w-xl text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
+            Kelas teknologi yang langsung bisa dipraktikkan.
+          </h1>
+          <p class="mt-6 max-w-lg text-base leading-relaxed text-ink/70 md:text-lg">
+            Telusuri kelas web development, data science, AI, cybersecurity, cloud, dan lainnya —
+            lengkap dengan mentor praktisi, level, format belajar, serta biaya yang transparan.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#kelas" class="btn btn-primary">
+              Lihat Katalog Kelas
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+              </svg>
+            </a>
+            <a href="#daftar-mentor" class="btn btn-ghost">Daftar Jadi Mentor</a>
+          </div>
+          <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs uppercase tracking-wider text-ink/55">
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+              Form tervalidasi
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+              Online &amp; offline
+            </li>
+            <li class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+              Mentor praktisi
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-ink p-6 md:p-8">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-paper/50">Cari Kelas</p>
+
+          <form role="search" id="form-cari" class="mt-4 flex gap-2" novalidate>
+            <label class="sr-only" for="input-cari">Cari kategori, nama kelas, atau mentor</label>
+            <input id="input-cari" type="search" name="q" placeholder="React, data science, nama mentor..." class="input flex-1" autocomplete="off">
+            <button type="submit" class="btn btn-accent px-4" aria-label="Cari kelas">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.34-4.34M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"/>
+              </svg>
+            </button>
+          </form>
+
+          <div class="mt-6 grid grid-cols-3 gap-4 border-t border-paper/15 pt-6">
+            <div>
+              <p class="stat-num">12</p>
+              <p class="stat-label">Kelas tersedia</p>
+            </div>
+            <div>
+              <p class="stat-num">08</p>
+              <p class="stat-label">Kategori IT</p>
+            </div>
+            <div>
+              <p class="stat-num">06</p>
+              <p class="stat-label">Mentor aktif</p>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-paper/15 pt-6">
+            <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-paper/50">Kategori Populer</p>
+            <div class="flex flex-wrap gap-2">
+              <a href="#kelas" class="chip border-paper/25 bg-transparent text-paper/80 transition-colors hover:bg-paper hover:text-ink">Web Dev</a>
+              <a href="#kelas" class="chip border-paper/25 bg-transparent text-paper/80 transition-colors hover:bg-paper hover:text-ink">Data Science</a>
+              <a href="#kelas" class="chip border-paper/25 bg-transparent text-paper/80 transition-colors hover:bg-paper hover:text-ink">AI</a>
+              <a href="#kelas" class="chip border-paper/25 bg-transparent text-paper/80 transition-colors hover:bg-paper hover:text-ink">Cybersecurity</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KATEGORI ============ -->
+    <section id="kategori" class="border-b border-line">
+      <div class="container-x py-16 md:py-20">
+        <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="kicker mb-3">01 — Kategori</p>
+            <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Delapan jalur belajar IT</h2>
+          </div>
+          <p class="max-w-sm text-sm text-ink/60">Setiap kelas dikelompokkan ke dalam satu kategori agar mudah dicari dan difilter.</p>
+        </div>
+
+        <ul class="grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">01</p>
+            <h3 class="mt-3 font-bold">Web Development</h3>
+            <p class="mt-1 text-sm text-ink/60">3 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">02</p>
+            <h3 class="mt-3 font-bold">Mobile Development</h3>
+            <p class="mt-1 text-sm text-ink/60">1 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">03</p>
+            <h3 class="mt-3 font-bold">Data Science</h3>
+            <p class="mt-1 text-sm text-ink/60">2 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">04</p>
+            <h3 class="mt-3 font-bold">UI/UX Design</h3>
+            <p class="mt-1 text-sm text-ink/60">1 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">05</p>
+            <h3 class="mt-3 font-bold">Cybersecurity</h3>
+            <p class="mt-1 text-sm text-ink/60">2 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">06</p>
+            <h3 class="mt-3 font-bold">Cloud &amp; DevOps</h3>
+            <p class="mt-1 text-sm text-ink/60">1 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">07</p>
+            <h3 class="mt-3 font-bold">Artificial Intelligence</h3>
+            <p class="mt-1 text-sm text-ink/60">1 kelas</p>
+          </li>
+          <li class="group bg-white p-6 transition-colors hover:bg-paper">
+            <p class="font-mono text-xs text-ink/40">08</p>
+            <h3 class="mt-3 font-bold">Database</h3>
+            <p class="mt-1 text-sm text-ink/60">1 kelas</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ KATALOG KELAS ============ -->
+    <section id="kelas" class="border-b border-line">
+      <div class="container-x py-16 md:py-20">
+        <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="kicker mb-3">02 — Katalog</p>
+            <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Kelas yang tersedia</h2>
+          </div>
+          <p id="hasil-count" class="font-mono text-xs uppercase tracking-wider text-ink/55" aria-live="polite">Menampilkan 12 dari 12 kelas</p>
+        </div>
+
+        <div class="mb-10 flex flex-col gap-4 border border-line bg-white p-5 lg:flex-row lg:items-end">
+          <div class="flex-1">
+            <label class="label" for="filter-kategori">Kategori</label>
+            <select id="filter-kategori" class="input" name="kategori">
+              <option value="">Semua kategori</option>
+              <option value="web-development">Web Development</option>
+              <option value="mobile-development">Mobile Development</option>
+              <option value="data-science">Data Science</option>
+              <option value="ui-ux-design">UI/UX Design</option>
+              <option value="cybersecurity">Cybersecurity</option>
+              <option value="cloud-devops">Cloud &amp; DevOps</option>
+              <option value="artificial-intelligence">Artificial Intelligence</option>
+              <option value="database">Database</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="label" for="filter-level">Level</label>
+            <select id="filter-level" class="input" name="level">
+              <option value="">Semua level</option>
+              <option value="pemula">Pemula</option>
+              <option value="menengah">Menengah</option>
+              <option value="lanjutan">Lanjutan</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="label" for="filter-format">Format</label>
+            <select id="filter-format" class="input" name="format">
+              <option value="">Semua format</option>
+              <option value="online">Online</option>
+              <option value="offline">Offline</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+          <button type="button" id="filter-reset" class="btn btn-ghost lg:mb-0">Reset Filter</button>
+        </div>
+
+        <div id="grid-kelas" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          <article class="card flex flex-col" data-kelas="1" data-kategori="web-development" data-level="pemula" data-format="hybrid" data-nama="Fundamental Web Development: HTML, CSS, dan JavaScript" data-mentor="Andira Putri">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">&lt;/&gt;</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">01</span>
+              <span class="chip">Web Development</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Fundamental Web Development: HTML, CSS, dan JavaScript</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Hybrid · 12 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Andira Putri</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp350.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="1">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="2" data-kategori="web-development" data-level="menengah" data-format="online" data-nama="Pemrograman React untuk Antarmuka Modern" data-mentor="Andira Putri">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">{ }</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">02</span>
+              <span class="chip">Web Development</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Pemrograman React untuk Antarmuka Modern</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Menengah · Online · 10 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Andira Putri</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp450.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="2">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="3" data-kategori="data-science" data-level="pemula" data-format="online" data-nama="Analisis Data dengan Python untuk Pemula" data-mentor="Rizky Pratama">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">[ ]</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">03</span>
+              <span class="chip">Data Science</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Analisis Data dengan Python untuk Pemula</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Online · 8 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Rizky Pratama</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp400.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="3">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="4" data-kategori="cybersecurity" data-level="menengah" data-format="hybrid" data-nama="Keamanan Aplikasi Web" data-mentor="Fajar Nugroho">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">[x]</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">04</span>
+              <span class="chip">Cybersecurity</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Keamanan Aplikasi Web</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Menengah · Hybrid · 10 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Fajar Nugroho</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp550.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="4">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="5" data-kategori="mobile-development" data-level="menengah" data-format="online" data-nama="Mobile Development dengan Flutter" data-mentor="Salsabila Rahma">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">[ ]</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">05</span>
+              <span class="chip">Mobile Development</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Mobile Development dengan Flutter</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Menengah · Online · 14 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Salsabila Rahma</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp500.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="5">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="6" data-kategori="ui-ux-design" data-level="pemula" data-format="online" data-nama="Desain UI/UX dengan Figma" data-mentor="Nadia Kusuma">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">( )</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">06</span>
+              <span class="chip">UI/UX Design</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Desain UI/UX dengan Figma</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Online · 8 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Nadia Kusuma</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp375.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="6">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="7" data-kategori="artificial-intelligence" data-level="menengah" data-format="offline" data-nama="Dasar-Dasar Machine Learning" data-mentor="Dimas Wibowo">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">(·)</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">07</span>
+              <span class="chip">Artificial Intelligence</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Dasar-Dasar Machine Learning</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Menengah · Offline · 12 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Dimas Wibowo</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp650.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="7">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="8" data-kategori="cloud-devops" data-level="lanjutan" data-format="hybrid" data-nama="Deploy dan Orkestrasi dengan Docker dan Kubernetes" data-mentor="Dimas Wibowo">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">&gt;_</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">08</span>
+              <span class="chip">Cloud &amp; DevOps</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Deploy dan Orkestrasi dengan Docker dan Kubernetes</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Lanjutan · Hybrid · 10 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Dimas Wibowo</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp700.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="8">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="9" data-kategori="database" data-level="pemula" data-format="offline" data-nama="Basis Data Relasional dengan PostgreSQL" data-mentor="Rizky Pratama">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">(=)</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">09</span>
+              <span class="chip">Database</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Basis Data Relasional dengan PostgreSQL</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Offline · 9 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Rizky Pratama</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp350.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="9">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="10" data-kategori="web-development" data-level="menengah" data-format="online" data-nama="Membangun API REST dengan Node.js" data-mentor="Andira Putri">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">&lt;/&gt;</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">10</span>
+              <span class="chip">Web Development</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Membangun API REST dengan Node.js</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Menengah · Online · 11 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Andira Putri</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp475.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="10">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="11" data-kategori="data-science" data-level="pemula" data-format="hybrid" data-nama="Visualisasi Data dengan Power BI" data-mentor="Rizky Pratama">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">[|]</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">11</span>
+              <span class="chip">Data Science</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Visualisasi Data dengan Power BI</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Hybrid · 7 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Rizky Pratama</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp325.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="11">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card flex flex-col" data-kelas="12" data-kategori="cybersecurity" data-level="pemula" data-format="online" data-nama="Pengujian Keamanan Jaringan Dasar" data-mentor="Fajar Nugroho">
+            <div class="relative flex h-36 items-end justify-between border-b border-line bg-ink/[0.04] px-4 pb-3">
+              <span class="font-mono text-4xl font-bold text-ink/15" aria-hidden="true">[x]</span>
+              <span class="absolute right-4 top-3 font-mono text-xs text-ink/40">12</span>
+              <span class="chip">Cybersecurity</span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="font-bold leading-snug">Pengujian Keamanan Jaringan Dasar</h3>
+              <p class="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/55">Pemula · Online · 8 pertemuan</p>
+              <p class="mt-2 text-sm text-ink/70">Mentor: <span class="font-semibold text-ink">Fajar Nugroho</span></p>
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
+                <p class="font-mono text-lg font-semibold">Rp425.000</p>
+                <div class="flex gap-2">
+                  <button type="button" class="btn btn-ghost btn-sm" data-buka-detail="12">Detail</button>
+                  <a href="#daftar-kelas" class="btn btn-primary btn-sm">Daftar</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <p id="kelas-kosong" class="hidden border border-line bg-white p-10 text-center text-sm text-ink/60">
+          Tidak ada kelas yang cocok. Coba ubah kata kunci atau reset filter.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ CARA KERJA ============ -->
+    <section class="border-b border-line">
+      <div class="container-x py-16 md:py-20">
+        <div class="mb-10">
+          <p class="kicker mb-3">03 — Cara Kerja</p>
+          <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Tiga langkah, kelas dimulai</h2>
+        </div>
+
+        <ol class="grid gap-6 md:grid-cols-3">
+          <li class="border border-line bg-white p-6">
+            <p class="font-mono text-sm font-semibold text-accent">01</p>
+            <h3 class="mt-4 text-lg font-bold">Pilih kelas</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/65">Telusuri katalog, saring berdasarkan kategori, level, dan format, lalu buka detail kelas untuk melihat materi yang dibahas.</p>
+          </li>
+          <li class="border border-line bg-white p-6">
+            <p class="font-mono text-sm font-semibold text-accent">02</p>
+            <h3 class="mt-4 text-lg font-bold">Daftar &amp; bayar</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/65">Isi formulir pendaftaran, pilih metode pembayaran (transfer bank, e-wallet, atau QRIS), dan tunggu konfirmasi dari pengelola.</p>
+          </li>
+          <li class="border border-line bg-white p-6">
+            <p class="font-mono text-sm font-semibold text-accent">03</p>
+            <h3 class="mt-4 text-lg font-bold">Mulai belajar</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/65">Ikuti kelas dari mentor praktisi sesuai jumlah pertemuan, kerjakan latihan, dan selesaikan proyek akhir.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ AJAKAN MENTOR ============ -->
+    <section class="border-b border-line">
+      <div class="container-x py-12 md:py-16">
+        <div class="flex flex-col gap-6 border border-ink bg-white p-8 md:flex-row md:items-center md:justify-between md:p-10">
+          <div>
+            <p class="kicker mb-3">Bergabung</p>
+            <h2 class="text-2xl font-extrabold tracking-tight md:text-3xl">Punya keahlian IT? Jadilah mentor Skillup Academy.</h2>
+            <p class="mt-3 max-w-xl text-sm leading-relaxed text-ink/65">Kirim formulir pendaftaran berisi bidang keahlian, kategori yang diminati, pengalaman mengajar, dan portofolio. Pengelola akan meninjau pengajuanmu.</p>
+          </div>
+          <a href="#daftar-mentor" class="btn btn-primary shrink-0">
+            Isi Formulir Mentor
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MENTOR ============ -->
+    <section id="mentor" class="border-b border-line">
+      <div class="container-x py-16 md:py-20">
+        <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="kicker mb-3">04 — Mentor</p>
+            <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Praktisi yang mengampu kelas</h2>
+          </div>
+          <p class="max-w-sm text-sm text-ink/60">Mentor lolos seleksi pengelola berdasarkan bidang keahlian, pengalaman mengajar, dan portofolio.</p>
+        </div>
+
+        <div id="grid-mentor" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          <article class="card flex flex-col p-6" data-mentor="andira">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Andira Putri</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">Web Development</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">AP</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Frontend engineer yang fokus pada ekosistem JavaScript dan aksesibilitas antarmuka.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">03</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">06 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="andira">Lihat Profil</button>
+          </article>
+
+          <article class="card flex flex-col p-6" data-mentor="rizky">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Rizky Pratama</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">Data Science · Database</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">RP</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Data analyst yang mendalami Python, SQL, dan visualisasi data untuk pengambilan keputusan.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">03</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">05 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="rizky">Lihat Profil</button>
+          </article>
+
+          <article class="card flex flex-col p-6" data-mentor="nadia">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Nadia Kusuma</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">UI/UX Design</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">NK</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Product designer yang mengajar riset pengguna, wireframing, hingga design system.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">01</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">04 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="nadia">Lihat Profil</button>
+          </article>
+
+          <article class="card flex flex-col p-6" data-mentor="fajar">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Fajar Nugroho</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">Cybersecurity</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">FN</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Security analyst yang berpengalaman menguji aplikasi web dan jaringan perusahaan.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">02</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">07 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="fajar">Lihat Profil</button>
+          </article>
+
+          <article class="card flex flex-col p-6" data-mentor="salsabila">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Salsabila Rahma</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">Mobile Development</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">SR</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Mobile developer Flutter yang gemar membangun aplikasi lintas platform yang ringan.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">01</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">05 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="salsabila">Lihat Profil</button>
+          </article>
+
+          <article class="card flex flex-col p-6" data-mentor="dimas">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-bold">Dimas Wibowo</h3>
+                <p class="font-mono text-xs uppercase tracking-wider text-brand">Cloud &amp; DevOps · AI</p>
+              </div>
+              <span class="font-mono text-3xl font-bold text-ink/10" aria-hidden="true">DW</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-ink/65">Platform engineer yang mengelola infrastruktur cloud serta pengantar machine learning.</p>
+            <dl class="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 text-center">
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas</dt>
+                <dd class="font-mono text-lg font-semibold">02</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+                <dd class="font-mono text-lg font-semibold">08 th</dd>
+              </div>
+              <div>
+                <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+                <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+              </div>
+            </dl>
+            <button type="button" class="btn btn-ghost btn-sm mt-5" data-buka-mentor="dimas">Lihat Profil</button>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FORMULIR PENDAFTARAN ============ -->
+    <section class="border-b border-line">
+      <div class="container-x py-16 md:py-20">
+        <div class="mb-10">
+          <p class="kicker mb-3">05 — Formulir</p>
+          <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Daftar kelas atau jadi mentor</h2>
+        </div>
+
+        <div class="grid gap-8 lg:grid-cols-2">
+
+          <div id="daftar-kelas" class="card scroll-mt-24 p-6 md:p-8">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-ink/45">Formulir A</p>
+            <h3 class="mt-2 text-2xl font-extrabold tracking-tight">Pendaftaran Kelas</h3>
+            <p class="mt-2 text-sm text-ink/65">Semua kolom wajib diisi. Email harus valid dan nomor HP minimal 9 digit.</p>
+
+            <form id="form-daftar-kelas" class="mt-6 grid gap-5" novalidate>
+              <div>
+                <label class="label" for="kelas-nama">Nama Lengkap</label>
+                <input id="kelas-nama" name="nama" type="text" class="input" placeholder="Nama sesuai identitas" autocomplete="name" required aria-describedby="err-kelas-nama">
+                <p class="err" id="err-kelas-nama" role="alert"></p>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label class="label" for="kelas-email">Email</label>
+                  <input id="kelas-email" name="email" type="email" class="input" placeholder="nama@email.com" autocomplete="email" required aria-describedby="err-kelas-email">
+                  <p class="err" id="err-kelas-email" role="alert"></p>
+                </div>
+                <div>
+                  <label class="label" for="kelas-hp">Nomor HP</label>
+                  <input id="kelas-hp" name="no_hp" type="tel" class="input" placeholder="08xxxxxxxxxx" autocomplete="tel" required aria-describedby="err-kelas-hp helper-kelas-hp">
+                  <span class="helper" id="helper-kelas-hp">Minimal 9 digit angka.</span>
+                  <p class="err" id="err-kelas-hp" role="alert"></p>
+                </div>
+              </div>
+
+              <div>
+                <label class="label" for="kelas-pilihan">Kelas yang Dipilih</label>
+                <select id="kelas-pilihan" name="id_kelas" class="input" required aria-describedby="err-kelas-pilihan">
+                  <option value="">Pilih kelas</option>
+                  <option value="1">Fundamental Web Development: HTML, CSS, dan JavaScript — Pemula</option>
+                  <option value="2">Pemrograman React untuk Antarmuka Modern — Menengah</option>
+                  <option value="3">Analisis Data dengan Python untuk Pemula — Pemula</option>
+                  <option value="4">Keamanan Aplikasi Web — Menengah</option>
+                  <option value="5">Mobile Development dengan Flutter — Menengah</option>
+                  <option value="6">Desain UI/UX dengan Figma — Pemula</option>
+                  <option value="7">Dasar-Dasar Machine Learning — Menengah</option>
+                  <option value="8">Deploy dan Orkestrasi dengan Docker dan Kubernetes — Lanjutan</option>
+                  <option value="9">Basis Data Relasional dengan PostgreSQL — Pemula</option>
+                  <option value="10">Membangun API REST dengan Node.js — Menengah</option>
+                  <option value="11">Visualisasi Data dengan Power BI — Pemula</option>
+                  <option value="12">Pengujian Keamanan Jaringan Dasar — Pemula</option>
+                </select>
+                <p class="err" id="err-kelas-pilihan" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="kelas-metode">Metode Pembayaran</label>
+                <select id="kelas-metode" name="metode_pembayaran" class="input" required aria-describedby="err-kelas-metode">
+                  <option value="">Pilih metode</option>
+                  <option value="transfer-bank">Transfer Bank</option>
+                  <option value="e-wallet">E-Wallet</option>
+                  <option value="qris">QRIS</option>
+                </select>
+                <p class="err" id="err-kelas-metode" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="kelas-catatan">Catatan <span class="font-normal normal-case text-ink/40">(opsional)</span></label>
+                <textarea id="kelas-catatan" name="catatan" class="input min-h-24 resize-y" placeholder="Pertanyaan atau permintaan khusus seputar kelas"></textarea>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-4 border-t border-line pt-5">
+                <button type="submit" class="btn btn-primary">Kirim Pendaftaran</button>
+                <p class="font-mono text-[11px] uppercase tracking-wider text-ink/45">Data ditinjau pengelola</p>
+              </div>
+
+              <p id="status-kelas" class="hidden border border-brand/40 bg-brand/10 p-4 text-sm font-medium text-brand" role="status"></p>
+            </form>
+          </div>
+
+          <div id="daftar-mentor" class="card scroll-mt-24 p-6 md:p-8">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-ink/45">Formulir B</p>
+            <h3 class="mt-2 text-2xl font-extrabold tracking-tight">Pendaftaran Mentor</h3>
+            <p class="mt-2 text-sm text-ink/65">Pengajuan ditinjau pengelola. Mentor yang lolos seleksi dapat mulai mengampu kelas.</p>
+
+            <form id="form-daftar-mentor" class="mt-6 grid gap-5" novalidate>
+              <div>
+                <label class="label" for="mentor-nama">Nama Lengkap</label>
+                <input id="mentor-nama" name="nama" type="text" class="input" placeholder="Nama sesuai identitas" autocomplete="name" required aria-describedby="err-mentor-nama">
+                <p class="err" id="err-mentor-nama" role="alert"></p>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label class="label" for="mentor-email">Email</label>
+                  <input id="mentor-email" name="email" type="email" class="input" placeholder="nama@email.com" autocomplete="email" required aria-describedby="err-mentor-email">
+                  <p class="err" id="err-mentor-email" role="alert"></p>
+                </div>
+                <div>
+                  <label class="label" for="mentor-hp">Nomor HP</label>
+                  <input id="mentor-hp" name="no_hp" type="tel" class="input" placeholder="08xxxxxxxxxx" autocomplete="tel" required aria-describedby="err-mentor-hp">
+                  <p class="err" id="err-mentor-hp" role="alert"></p>
+                </div>
+              </div>
+
+              <div>
+                <label class="label" for="mentor-bidang">Bidang Keahlian</label>
+                <input id="mentor-bidang" name="bidang_keahlian" type="text" class="input" placeholder="Contoh: Frontend Engineering" required aria-describedby="err-mentor-bidang">
+                <p class="err" id="err-mentor-bidang" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="mentor-kategori">Kategori yang Diminati</label>
+                <select id="mentor-kategori" name="id_kategori" class="input" required aria-describedby="err-mentor-kategori">
+                  <option value="">Pilih kategori</option>
+                  <option value="1">Web Development</option>
+                  <option value="2">Mobile Development</option>
+                  <option value="3">Data Science</option>
+                  <option value="4">UI/UX Design</option>
+                  <option value="5">Cybersecurity</option>
+                  <option value="6">Cloud &amp; DevOps</option>
+                  <option value="7">Artificial Intelligence</option>
+                  <option value="8">Database</option>
+                </select>
+                <p class="err" id="err-mentor-kategori" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="mentor-pengalaman">Pengalaman Mengajar</label>
+                <textarea id="mentor-pengalaman" name="pengalaman_mengajar" class="input min-h-24 resize-y" placeholder="Ceritakan pengalaman mengajar atau membimbing yang pernah kamu lakukan" required aria-describedby="err-mentor-pengalaman"></textarea>
+                <p class="err" id="err-mentor-pengalaman" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="mentor-porto">Tautan Portofolio</label>
+                <input id="mentor-porto" name="portofolio" type="url" class="input" placeholder="https://portofolio.dev" required aria-describedby="err-mentor-porto helper-mentor-porto">
+                <span class="helper" id="helper-mentor-porto">Harus berupa alamat web yang valid, diawali https://</span>
+                <p class="err" id="err-mentor-porto" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="mentor-alasan">Alasan Ingin Mengajar</label>
+                <textarea id="mentor-alasan" name="alasan" class="input min-h-24 resize-y" placeholder="Mengapa kamu ingin menjadi mentor di Skillup Academy?" required aria-describedby="err-mentor-alasan"></textarea>
+                <p class="err" id="err-mentor-alasan" role="alert"></p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-4 border-t border-line pt-5">
+                <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>
+                <p class="font-mono text-[11px] uppercase tracking-wider text-ink/45">Status awal: baru</p>
+              </div>
+
+              <p id="status-mentor" class="hidden border border-brand/40 bg-brand/10 p-4 text-sm font-medium text-brand" role="status"></p>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA PENUTUP ============ -->
+    <section class="bg-accent">
+      <div class="container-x flex flex-col items-start justify-between gap-6 py-14 md:flex-row md:items-center md:py-16">
+        <div>
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-ink/70">Mulai sekarang</p>
+          <h2 class="mt-3 max-w-xl text-3xl font-extrabold tracking-tight text-ink md:text-4xl">Siap ambil kelas pertama kamu?</h2>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="#daftar-kelas" class="btn bg-ink text-paper hover:bg-brand">Daftar Kelas</a>
+          <a href="#kelas" class="btn btn-ghost">Lihat Katalog</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-ink text-paper">
+    <div class="container-x grid gap-10 py-14 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <div class="flex items-baseline gap-2">
+          <span class="text-lg font-extrabold tracking-tight">SKILLUP</span>
+          <span class="font-mono text-xs uppercase tracking-[0.25em] text-paper/50">Academy</span>
+        </div>
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-paper/60">Platform kursus IT dan pendaftaran mentor berbasis web. Seluruh kelas berada di bidang teknologi, dari pemula hingga lanjutan.</p>
+      </div>
+
+      <nav aria-label="Tautan katalog">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-paper/40">Jelajahi</p>
+        <ul class="mt-4 space-y-2 text-sm text-paper/70">
+          <li><a href="#kelas" class="transition-colors hover:text-paper">Katalog Kelas</a></li>
+          <li><a href="#kategori" class="transition-colors hover:text-paper">Kategori</a></li>
+          <li><a href="#mentor" class="transition-colors hover:text-paper">Mentor</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-paper/40">Pendaftaran</p>
+        <ul class="mt-4 space-y-2 text-sm text-paper/70">
+          <li><a href="#daftar-kelas" class="transition-colors hover:text-paper">Daftar Kelas</a></li>
+          <li><a href="#daftar-mentor" class="transition-colors hover:text-paper">Daftar Jadi Mentor</a></li>
+        </ul>
+        <p class="mt-6 font-mono text-xs uppercase tracking-[0.2em] text-paper/40">Tim</p>
+        <ul class="mt-3 space-y-1 text-xs text-paper/60">
+          <li>Billiam Agsa Tatema Hia</li>
+          <li>Alpin Maica Pratama</li>
+          <li>Dzaki Haikal Buchari</li>
+          <li>Mayong Aditya Pradana</li>
+          <li>Dwaia Prananta Ginting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-paper/10">
+      <div class="container-x flex flex-col gap-2 py-5 font-mono text-[11px] uppercase tracking-wider text-paper/40 sm:flex-row sm:items-center sm:justify-between">
+        <p>© 2026 Skillup Academy</p>
+        <p>Proyek Pemrograman Web dan Basis Data</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL DETAIL KELAS ============ -->
+  <dialog id="modal-detail-kelas" class="w-[min(92vw,44rem)] border border-ink bg-paper p-0 text-ink backdrop:bg-ink/60" aria-labelledby="modal-kelas-judul">
+    <div class="max-h-[85vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-brand" id="modal-kelas-kategori">Kategori</p>
+          <h2 class="mt-1 text-xl font-extrabold tracking-tight" id="modal-kelas-judul">Judul Kelas</h2>
+        </div>
+        <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-line hover:bg-line" data-tutup-dialog aria-label="Tutup detail kelas">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="px-6 py-6">
+        <div class="flex flex-wrap gap-2" id="modal-kelas-meta">
+          <span class="chip">Level</span>
+          <span class="chip">Format</span>
+          <span class="chip">Pertemuan</span>
+          <span class="chip">Durasi</span>
+        </div>
+
+        <p class="mt-5 text-sm leading-relaxed text-ink/70" id="modal-kelas-deskripsi">
+          Deskripsi kelas akan ditampilkan di sini.
+        </p>
+
+        <div class="mt-6">
+          <h3 class="font-mono text-xs uppercase tracking-[0.2em] text-ink/50">Materi yang Dibahas</h3>
+          <ul class="mt-3 grid gap-2 sm:grid-cols-2" id="modal-kelas-materi">
+            <li class="flex items-start gap-2 text-sm text-ink/70"><svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>Konsep dan fondasi</li>
+            <li class="flex items-start gap-2 text-sm text-ink/70"><svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>Praktik langsung</li>
+            <li class="flex items-start gap-2 text-sm text-ink/70"><svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>Studi kasus nyata</li>
+            <li class="flex items-start gap-2 text-sm text-ink/70"><svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 shrink-0 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>Proyek akhir dan review</li>
+          </ul>
+        </div>
+
+        <div class="mt-6 flex items-center justify-between gap-4 border border-line bg-white p-4">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-ink/50">Mentor Pengampu</p>
+            <p class="font-bold" id="modal-kelas-mentor">Nama Mentor</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs uppercase tracking-wide text-ink/50">Biaya</p>
+            <p class="font-mono text-xl font-semibold" id="modal-kelas-harga">Rp0</p>
+          </div>
+        </div>
+
+        <form id="form-cepat" class="mt-6 border-t border-line pt-6" novalidate>
+          <p class="label">Daftar cepat via email</p>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <label class="sr-only" for="cepat-email">Email</label>
+            <input id="cepat-email" name="email" type="email" class="input flex-1" placeholder="nama@email.com" autocomplete="email" required aria-describedby="err-cepat-email">
+            <button type="submit" class="btn btn-accent">Daftar Kelas Ini</button>
+          </div>
+          <p class="err" id="err-cepat-email" role="alert"></p>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============ MODAL DETAIL MENTOR ============ -->
+  <dialog id="modal-detail-mentor" class="w-[min(92vw,40rem)] border border-ink bg-paper p-0 text-ink backdrop:bg-ink/60" aria-labelledby="modal-mentor-judul">
+    <div class="max-h-[85vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
+        <div>
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-brand" id="modal-mentor-bidang">Bidang Keahlian</p>
+          <h2 class="mt-1 text-xl font-extrabold tracking-tight" id="modal-mentor-judul">Nama Mentor</h2>
+        </div>
+        <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-line hover:bg-line" data-tutup-dialog aria-label="Tutup profil mentor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="px-6 py-6">
+        <p class="text-sm leading-relaxed text-ink/70" id="modal-mentor-bio">Bio mentor akan ditampilkan di sini.</p>
+
+        <dl class="mt-5 grid grid-cols-3 gap-3 border border-line bg-white p-4 text-center">
+          <div>
+            <dt class="text-[11px] uppercase tracking-wide text-ink/50">Pengalaman</dt>
+            <dd class="font-mono text-lg font-semibold" id="modal-mentor-pengalaman">—</dd>
+          </div>
+          <div>
+            <dt class="text-[11px] uppercase tracking-wide text-ink/50">Kelas Diampu</dt>
+            <dd class="font-mono text-lg font-semibold" id="modal-mentor-jumlah-kelas">—</dd>
+          </div>
+          <div>
+            <dt class="text-[11px] uppercase tracking-wide text-ink/50">Status</dt>
+            <dd class="font-mono text-lg font-semibold text-brand">Aktif</dd>
+          </div>
+        </dl>
+
+        <div class="mt-6">
+          <h3 class="font-mono text-xs uppercase tracking-[0.2em] text-ink/50">Kelas yang Diampu</h3>
+          <ul class="mt-3 flex flex-wrap gap-2" id="modal-mentor-kelas">
+            <li class="chip">Belum ada data</li>
+          </ul>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3 border-t border-line pt-6">
+          <a href="#daftar-kelas" class="btn btn-primary" data-tutup-dialog>Lihat Katalog Kelas</a>
+          <a href="#daftar-mentor" class="btn btn-ghost" data-tutup-dialog>Ajukan Diri Jadi Mentor</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
