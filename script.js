@@ -251,3 +251,225 @@ document.querySelectorAll(".input").forEach((input) => {
     if (input.getAttribute("aria-invalid") === "true") setError(input, errEl, "");
   });
 });
+
+const formatRupiah = (n) => "Rp" + Number(n || 0).toLocaleString("id-ID");
+const pad2 = (n) => String(n).padStart(2, "0");
+const angkaDari = (teks) => Number(String(teks || "").replace(/\D/g, "")) || 0;
+const escHtml = (s) =>
+  String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const slugDari = (teks) =>
+  String(teks).toLowerCase().replace(/&amp;/g, "&").replace(/&/g, " ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+const DATA_KELAS = {
+  1: { durasi: 24, deskripsi: "Kelas pengantar untuk membangun halaman web dari nol: menyusun struktur dengan HTML, mempercantik tampilan dengan CSS, dan menambahkan interaksi dengan JavaScript.",
+       materi: ["Struktur dokumen HTML", "Layout dan responsive dengan CSS", "Dasar JavaScript dan manipulasi DOM", "Proyek landing page pribadi"] },
+  2: { durasi: 20, deskripsi: "Pelajari cara membangun antarmuka modern berbasis komponen menggunakan React, dari state sederhana hingga pengelolaan data antar komponen.",
+       materi: ["Komponen dan props", "State dan hooks", "Routing dan form", "Proyek aplikasi single page"] },
+  3: { durasi: 16, deskripsi: "Kenali alur analisis data memakai Python: membersihkan data, mengolahnya, lalu membaca pola dari hasilnya.",
+       materi: ["Dasar Python untuk data", "Pandas dan pembersihan data", "Statistik deskriptif", "Visualisasi dengan Matplotlib"] },
+  4: { durasi: 20, deskripsi: "Memahami celah umum pada aplikasi web dan cara menutupnya sejak tahap pengembangan.",
+       materi: ["OWASP Top 10", "SQL injection dan XSS", "Autentikasi dan manajemen sesi", "Uji keamanan sederhana"] },
+  5: { durasi: 28, deskripsi: "Bangun aplikasi mobile lintas platform dengan Flutter dan bahasa Dart, dari tata letak widget sampai konsumsi API.",
+       materi: ["Dasar Dart", "Widget dan layout", "Navigasi dan state", "Integrasi API dan rilis aplikasi"] },
+  6: { durasi: 16, deskripsi: "Belajar merancang antarmuka yang jelas dan nyaman dipakai, mulai dari riset sederhana hingga prototipe interaktif di Figma.",
+       materi: ["Prinsip dasar UX", "Wireframe dan alur pengguna", "Komponen dan auto layout Figma", "Prototipe dan uji kegunaan"] },
+  7: { durasi: 24, deskripsi: "Pengantar machine learning: memahami cara model belajar dari data dan mengevaluasi hasilnya secara tepat.",
+       materi: ["Regresi dan klasifikasi", "Pembagian data latih dan uji", "Evaluasi model", "Proyek prediksi dengan scikit-learn"] },
+  8: { durasi: 20, deskripsi: "Kemas aplikasi dalam container, lalu kelola penyebarannya dalam skala besar dengan Kubernetes.",
+       materi: ["Image dan container Docker", "Docker Compose", "Pod, service, dan deployment", "Skalabilitas dan rolling update"] },
+  9: { durasi: 18, deskripsi: "Rancang dan kelola basis data relasional dengan PostgreSQL, dari desain tabel sampai query lanjutan.",
+       materi: ["Desain tabel dan relasi", "Query SELECT, JOIN, dan agregasi", "Normalisasi data", "Indeks dan dasar optimasi"] },
+  10: { durasi: 22, deskripsi: "Bangun layanan backend berbentuk API REST menggunakan Node.js, lengkap dengan validasi dan autentikasi.",
+        materi: ["Dasar Node.js dan Express", "Desain endpoint REST", "Validasi dan penanganan error", "Autentikasi JWT dan dokumentasi API"] },
+  11: { durasi: 14, deskripsi: "Ubah data mentah menjadi dasbor yang mudah dibaca dengan Power BI.",
+        materi: ["Impor dan transformasi data", "Model data sederhana", "Visual dan filter interaktif", "Dasbor ringkasan bisnis"] },
+  12: { durasi: 16, deskripsi: "Dasar pengujian keamanan jaringan: mengenali topologi, memindai layanan, dan membaca hasilnya dengan etis.",
+        materi: ["Konsep jaringan dan protokol", "Pemindaian dengan Nmap", "Analisis lalu lintas", "Etika dan pelaporan temuan"] }
+};
+
+const LABEL_FORMAT = { online: "Online", offline: "Offline", hybrid: "Hybrid" };
+const LABEL_LEVEL = { pemula: "Pemula", menengah: "Menengah", lanjutan: "Lanjutan" };
+
+function infoKelas(id) {
+  const kartu = kartuKelas.find((k) => k.dataset.kelas === String(id));
+  if (!kartu) return null;
+  const t = teksKartu(kartu);
+  const pertemuan = angkaDari((t.meta.match(/(\d+)\s*pertemuan/i) || [])[1]);
+  const harga = angkaDari(t.harga);
+  const tambahan = DATA_KELAS[id] || {};
+  return {
+    id: Number(id),
+    level: kartu.dataset.level,
+    format: kartu.dataset.format,
+    pertemuan,
+    harga,
+    hargaPerPertemuan: pertemuan > 0 ? Math.ceil(harga / pertemuan) : harga,
+    durasi: tambahan.durasi || pertemuan * 2,
+    deskripsi: tambahan.deskripsi || "",
+    materi: tambahan.materi || []
+  };
+}
+
+const optKategori = filterKategori ? Array.from(filterKategori.options).filter((o) => o.value) : [];
+
+function perbaruiAngkaDinamis() {
+  document.querySelectorAll("#kategori ul > li").forEach((li) => {
+    const judul = li.querySelector("h3")?.textContent.trim() || "";
+    const opt = optKategori.find((o) => slugDari(o.textContent) === slugDari(judul));
+    const p = li.querySelector("p:last-child");
+    if (opt && p) {
+      p.textContent = `${kartuKelas.filter((k) => k.dataset.kategori === opt.value).length} kelas`;
+    }
+  });
+
+  const stat = document.querySelectorAll("#beranda .stat-num");
+  const kartuMentor = document.querySelectorAll("#grid-mentor > [data-mentor]");
+  if (stat[0]) stat[0].textContent = pad2(totalKelas);
+  if (stat[1] && optKategori.length) stat[1].textContent = pad2(optKategori.length);
+  if (stat[2] && kartuMentor.length) stat[2].textContent = pad2(kartuMentor.length);
+
+  kartuMentor.forEach((kartu) => {
+    const nama = kartu.querySelector("h3")?.textContent.trim() || "";
+    kartu.querySelectorAll("dl > div").forEach((div) => {
+      if ((div.querySelector("dt")?.textContent.trim().toLowerCase() || "") === "kelas") {
+        const dd = div.querySelector("dd");
+        if (dd) dd.textContent = pad2(kartuKelas.filter((k) => k.dataset.mentor === nama).length);
+      }
+    });
+  });
+}
+perbaruiAngkaDinamis();
+
+const ALIAS_KATEGORI = { "web-dev": "web-development", ai: "artificial-intelligence" };
+
+function slugKategoriDariTeks(teks) {
+  const s = slugDari(teks);
+  const langsung = optKategori.find((o) => o.value === s || slugDari(o.textContent) === s);
+  return langsung ? langsung.value : ALIAS_KATEGORI[s] || "";
+}
+
+function filterKeKategori(slug) {
+  if (!filterKategori || !slug) return;
+  if (inputCari) inputCari.value = "";
+  if (filterLevel) filterLevel.value = "";
+  if (filterFormat) filterFormat.value = "";
+  filterKategori.value = slug;
+  terapkanFilter();
+}
+
+document.querySelectorAll("#beranda a.chip").forEach((a) => {
+  const slug = slugKategoriDariTeks(a.textContent.trim());
+  if (slug) a.addEventListener("click", () => filterKeKategori(slug));
+});
+
+document.querySelectorAll("#kategori ul > li").forEach((li) => {
+  const judul = li.querySelector("h3")?.textContent.trim() || "";
+  const slug = slugKategoriDariTeks(judul);
+  if (!slug) return;
+
+  li.setAttribute("tabindex", "0");
+  li.setAttribute("role", "button");
+  li.setAttribute("aria-label", `Tampilkan kelas ${judul}`);
+  li.style.cursor = "pointer";
+
+  const aksi = () => {
+    filterKeKategori(slug);
+    document.getElementById("kelas")?.scrollIntoView({ behavior: "smooth" });
+  };
+  li.addEventListener("click", aksi);
+  li.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); aksi(); }
+  });
+});
+
+const ikonCek = modalKelas?.querySelector("#modal-kelas-materi li svg")?.outerHTML || "";
+let kelasModalAktif = null;
+
+const kunciScroll = (kunci) => { document.body.style.overflow = kunci ? "hidden" : ""; };
+
+const bukaDetailKelasAsli = bukaDetailKelas;
+bukaDetailKelas = function (kartu) {
+  bukaDetailKelasAsli(kartu);
+  const info = kartu && modalKelas ? infoKelas(kartu.dataset.kelas) : null;
+  if (!info) return;
+  kelasModalAktif = info.id;
+
+  modalKelas.querySelector("#modal-kelas-meta").innerHTML = [
+    LABEL_LEVEL[info.level] || info.level,
+    LABEL_FORMAT[info.format] || info.format,
+    `${info.pertemuan} pertemuan`,
+    `${info.durasi} jam`
+  ].map((b) => `<span class="chip">${escHtml(b)}</span>`).join("");
+
+  if (info.deskripsi) modalKelas.querySelector("#modal-kelas-deskripsi").textContent = info.deskripsi;
+  if (info.materi.length) {
+    modalKelas.querySelector("#modal-kelas-materi").innerHTML = info.materi
+      .map((m) => `<li class="flex items-start gap-2 text-sm text-ink/70">${ikonCek}${escHtml(m)}</li>`)
+      .join("");
+  }
+
+  modalKelas.querySelector("#modal-kelas-harga").textContent = formatRupiah(info.harga);
+
+  let infoBiaya = modalKelas.querySelector("#modal-kelas-info");
+  if (!infoBiaya) {
+    infoBiaya = document.createElement("p");
+    infoBiaya.id = "modal-kelas-info";
+    infoBiaya.className = "mt-3 font-mono text-xs uppercase tracking-wider text-ink/55";
+    modalKelas.querySelector("#modal-kelas-harga").closest(".border")?.insertAdjacentElement("afterend", infoBiaya);
+  }
+  infoBiaya.textContent = `≈ ${formatRupiah(info.hargaPerPertemuan)} per pertemuan`;
+
+  if (formCepat) {
+    formCepat.reset();
+    setError(el("cepat-email"), el("err-cepat-email"), "");
+  }
+  kunciScroll(true);
+};
+
+const bukaProfilMentorAsli = bukaProfilMentor;
+bukaProfilMentor = function (kartu) {
+  bukaProfilMentorAsli(kartu);
+  if (kartu && modalMentor) kunciScroll(true);
+};
+
+[modalKelas, modalMentor].forEach((dlg) => dlg?.addEventListener("close", () => kunciScroll(false)));
+
+const pilihKelas = el("kelas-pilihan");
+let ringkasanBiaya = null;
+
+if (pilihKelas) {
+  ringkasanBiaya = document.createElement("p");
+  ringkasanBiaya.id = "ringkasan-biaya";
+  ringkasanBiaya.className = "mt-2 hidden font-mono text-xs uppercase tracking-wider text-ink/60";
+  ringkasanBiaya.setAttribute("aria-live", "polite");
+  el("err-kelas-pilihan")?.insertAdjacentElement("afterend", ringkasanBiaya);
+}
+
+function perbaruiRingkasan() {
+  if (!ringkasanBiaya || !pilihKelas) return;
+  const info = pilihKelas.value ? infoKelas(pilihKelas.value) : null;
+  ringkasanBiaya.classList.toggle("hidden", !info);
+  ringkasanBiaya.textContent = info
+    ? `Total bayar ${formatRupiah(info.harga)} · ≈ ${formatRupiah(info.hargaPerPertemuan)}/pertemuan · ${info.durasi} jam`
+    : "";
+}
+
+function pilihKelasDenganId(id) {
+  if (!pilihKelas || !id) return;
+  pilihKelas.value = String(id);
+  if (pilihKelas.getAttribute("aria-invalid") === "true") setError(pilihKelas, el("err-kelas-pilihan"), "");
+  perbaruiRingkasan();
+}
+
+pilihKelas?.addEventListener("change", perbaruiRingkasan);
+formKelas?.addEventListener("reset", () => setTimeout(perbaruiRingkasan, 0));
+
+document.addEventListener("click", (e) => {
+  const kartu = e.target.closest('a[href="#daftar-kelas"]')?.closest("[data-kelas]");
+  if (kartu) pilihKelasDenganId(kartu.dataset.kelas);
+});
+
+formCepat?.addEventListener("submit", () => {
+  if (el("cepat-email")?.getAttribute("aria-invalid") === "true") return;
+  pilihKelasDenganId(kelasModalAktif);
+});
