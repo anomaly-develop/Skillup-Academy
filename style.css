@@ -1,29 +1,4 @@
-/* ============================================================================
-   SKILLUP ACADEMY - Lapisan CSS Tulisan Tangan
-   ----------------------------------------------------------------------------
-   Berkas ini murni CSS biasa (vanilla). Tailwind CDN hanya mengompilasi blok
-   <style type="text/tailwindcss"> di dalam index.html, sehingga berkas .css
-   eksternal TIDAK bisa memakai @apply, @layer, atau @theme.
-
-   Pembagian tanggung jawab:
-   - Tailwind  -> layout, spacing, grid, dan utility harian
-   - CSS ini   -> token desain, tipografi fluid, state formulir, animasi
-                  dialog, polish interaksi, dan gaya cetak
-
-   Nilai warna dan nama kelas komponen di bawah ini dicerminkan dari
-   tailwind.config + blok <style type="text/tailwindcss"> milik teman
-   sekelompok, agar kedua lapisan terasa sebagai satu identitas visual.
-   ========================================================================== */
-
-
-/* ============================================================================
-   1. TOKEN DESAIN
-   ----------------------------------------------------------------------------
-   Satu sumber kebenaran untuk warna, radius, bayangan, dan skala tipografi.
-   ========================================================================== */
-
 :root {
-  /* Warna inti - cerminan tailwind.config */
   --paper: #f7f5ef;
   --ink: #14171f;
   --brand: #0f766e;
@@ -31,58 +6,37 @@
   --line: #e3dfd5;
   --danger: #b42318;
 
-  /* Turunan opacity, untuk warna transparan tanpa utility Tailwind */
   --ink-60: rgb(20 23 31 / 0.6);
   --ink-45: rgb(20 23 31 / 0.45);
   --brand-12: rgb(15 118 110 / 0.12);
 
-  /* Radius */
   --radius-sm: 2px;
 
-  /* Bayangan - sengaja tipis, tema memakai garis dan bukan gradien */
   --shadow-card: 0 1px 2px rgb(20 23 31 / 0.04);
   --shadow-lift: 0 12px 24px -12px rgb(20 23 31 / 0.18);
 
-  /* Gerak */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur-fast: 150ms;
   --dur-base: 220ms;
 
-  /* Tinggi header sticky - dipakai untuk scroll-margin */
   --header-h: 4rem;
 }
 
-
-/* ============================================================================
-   2. BASE
-   ========================================================================== */
-
 html {
-  /* Halaman ini satu halaman panjang dengan banyak jangkar, jadi scroll
-     halus terasa tepat. Nonaktif otomatis bila pengguna meminta reduced
-     motion (bagian 8). */
   scroll-behavior: smooth;
   color-scheme: light;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  /* Tailwind sudah memberi bg-paper dan text-ink lewat kelas pada <body>,
-     jadi di sini hanya yang benar-benar belum tersentuh. */
   overflow-x: hidden;
 }
 
-/* PERBAIKAN BUG: header bersifat sticky (tinggi 4rem + garis 1px), tetapi
-   #beranda, #kategori, #kelas, dan #mentor tidak punya scroll margin.
-   Akibatnya klik menu navigasi membuat judul section tertutup header.
-   Hanya dua form yang sudah memakai scroll-mt-24. Aturan di bawah menutup
-   celah itu tanpa menyentuh satu baris pun di index.html. */
 section[id],
 [id] {
   scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
 
-/* Beri tanda visual tipis pada section yang sedang dituju jangkar. */
 :target {
   animation: target-flash 1.2s var(--ease-out);
 }
@@ -92,12 +46,6 @@ section[id],
   color: var(--paper);
 }
 
-/* Cincin fokus yang konsisten untuk elemen yang tidak punya focus:ring Tailwind.
-   Elemen .input punya ring sendiri, jadi dikecualikan agar tidak dobel. */
-/* Sengaja didahului `html` agar spesifisitasnya (0,1,1) mengalahkan aturan
-   :focus-visible bawaan Tailwind preflight (0,1,0). Play CDN menyuntik
-   stylesheet-nya di posisi terakhir head, sehingga pada seri dia yang menang
-   dan cincin fokus kita akan tertimpa warna bawaan browser. */
 html :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
@@ -108,54 +56,26 @@ html :focus-visible {
   outline: none;
 }
 
-/* Angka pada .font-mono memakai lebar digit tetap supaya kolom harga
-   (Rp350.000) sejajar vertikal dan angka pada .stat-num tidak bergeser
-   ketika nilainya berubah karena filter. */
 .font-mono {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
 }
 
 
-/* ============================================================================
-   3. TIPOGRAFI
-   ----------------------------------------------------------------------------
-   Properti yang tidak bisa ditulis sebagai utility class Tailwind.
-   ========================================================================== */
-
 h1,
 h2,
 h3 {
-  /* Judul panjang seperti "Deploy dan Orkestrasi dengan Docker dan
-     Kubernetes" lebih enak dibaca kalau barisnya seimbang. */
+
   text-wrap: balance;
   overflow-wrap: break-word;
 }
 
-/* Ukuran judul yang responsif (text-4xl md:text-6xl, text-3xl md:text-4xl)
-   sudah ditangani Tailwind lewat kelas markup, jadi CSS ini SENGAJA tidak
-   menimpanya: aturan di sini kalah spesifisitas dari utility class dan
-   berakhir jadi kode mati. Yang ditambahkan justru properti yang tidak
-   bisa ditulis sebagai utility. */
 p {
-  /* Mencegah baris terakhir yang hanya satu kata terbuang. */
   text-wrap: pretty;
 }
 
-
-/* ============================================================================
-   4. FORMULIR
-   ----------------------------------------------------------------------------
-   State invalid sengaja disatukan lewat satu daftar selektor agar tampilannya
-   identik apa pun yang dipakai app.js nanti:
-     1. atribut aria-invalid="true"  - paling aksesibel, disarankan
-     2. kelas .is-invalid            - kalau JS tidak mau menyetel atribut
-     3. :user-invalid                - fallback CSS murni, tanpa JS
-   ========================================================================== */
-
 .input:where(input, select, textarea) {
-  /* Tailwind preflight tidak memberi panah pada <select>, jadi kolom pilihan
-     masih terlihat seperti kotak teks biasa. Ganti dengan chevron sendiri. */
+
   appearance: none;
   -webkit-appearance: none;
 }
@@ -168,8 +88,6 @@ select.input {
   background-size: 1.125rem 1.125rem;
   cursor: pointer;
 }
-
-/* Warna opsi saat dropdown dibuka mengikuti palet, bukan putih bawaan OS. */
 select.input option {
   color: var(--ink);
   background: #fff;
@@ -179,9 +97,6 @@ textarea.input {
   display: block;
 }
 
-/* Area pencarian di hero: tombol silang bawaan browser dirapikan agar sesuai
-   warna brand, bukan abu-abu sistem. Warnanya mengikuti currentColor, jadi
-   cukup satu ikon untuk keadaan terang maupun gelap. */
 input[type="search"]::-webkit-search-cancel-button {
   appearance: none;
   width: 1rem;
@@ -199,14 +114,12 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   opacity: 0.85;
 }
 
-/* --- State invalid ------------------------------------------------------- */
 
 .input[aria-invalid="true"],
 .input.is-invalid,
 .input:user-invalid {
   border-color: var(--danger);
   background: rgb(180 35 24 / 0.03);
-  /* Ring lembut mengikuti warna danger, sejajar dengan focus:ring brand */
   box-shadow: 0 0 0 3px rgb(180 35 24 / 0.12);
 }
 
@@ -217,29 +130,12 @@ input[type="search"]::-webkit-search-cancel-button:hover {
   box-shadow: 0 0 0 3px rgb(180 35 24 / 0.18);
 }
 
-/* --- Pesan error --------------------------------------------------------- */
-
-/* PENTING: .err menerima `hidden` dari Tailwind sebagai KELAS, bukan atribut
-   hidden. Karena itu jangan pernah menulis .err:not([hidden]) - selektor itu
-   punya spesifik lebih tinggi dari .hidden dan akan memunculkan SEMUA pesan
-   error sekaligus. app.js yang memegang kendali atas .err ini. */
-
-
-/* ============================================================================
-   5. DIALOG / MODAL
-   ----------------------------------------------------------------------------
-   Tailwind sudah menangani warna latar ::backdrop lewat varian `backdrop:`,
-   tetapi tidak memberi efek blur maupun animasi buka-tutup. Itu bagian CSS.
-   ========================================================================== */
-
 dialog {
-  /* Native <dialog> tidak otomatis terpusat rapi di semua browser. */
   margin: auto;
   max-height: 90vh;
 }
 
 dialog::backdrop {
-  /* Blur halus di belakang modal, supaya fokus mata langsung ke isi dialog. */
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
@@ -252,8 +148,6 @@ dialog[open]::backdrop {
   animation: backdrop-in var(--dur-base) ease-out both;
 }
 
-/* @starting-style memberi state awal saat elemen pertama kali tampil, sehingga
-   dialog bisa masuk dengan animasi tanpa perlu kelas bantu dari JavaScript. */
 @starting-style {
   dialog[open] {
     opacity: 0;
@@ -267,20 +161,11 @@ dialog[open]::backdrop {
   }
 }
 
-/* Isi modal boleh digulir, tapi tidak membuat halaman di belakangnya ikut
-   bergulir saat roda mouse mencapai batas atas atau bawah. */
 dialog > div {
   overscroll-behavior: contain;
 }
 
-
-/* ============================================================================
-   6. POLISH INTERAKSI
-   ========================================================================== */
-
 .card {
-  /* Transisi dipisah agar yang ter-hover hanya transform dan shadow, bukan
-     border-color yang ikut animate lalu membuat kartu bergeser dua piksel. */
   transition:
     transform var(--dur-base) var(--ease-out),
     box-shadow var(--dur-base) var(--ease-out),
@@ -288,8 +173,6 @@ dialog > div {
   box-shadow: var(--shadow-card);
 }
 
-/* Hanya di perangkat yang benar-benar punya hover. Di HP, kartu akan tetap
-   "nempel" terhover setelah disentuh - penyebab annoyance yang nyata. */
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-2px);
@@ -298,7 +181,6 @@ dialog > div {
   }
 }
 
-/* Dikunci dari keyboard: beri penanda fokus yang berbeda dengan hover. */
 .card:focus-within {
   border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--brand-12);
@@ -311,10 +193,6 @@ dialog > div {
     border-color var(--dur-fast) ease;
 }
 
-/* --- Garis bawah animasi pada navigasi desktop ---------------------------- */
-
-/* Hanya nav desktop. Nav seluler (#nav-mobile) memakai elemen <a> dengan
-   gaya yang sama dan tidak punya ruang untuk garis bawah, jadi jangan ikut. */
 header nav[aria-label="Navigasi utama"] a {
   position: relative;
   display: inline-block;
@@ -337,11 +215,8 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
   transform: scaleX(1);
 }
 
-/* --- Tombol --------------------------------------------------------------- */
 
 .btn {
-  /* transition-colors sudah ada dari Tailwind; tambahkan active state supaya
-     tombol terasa hidup saat ditekan, terutama di layar sentuh. */
   transition:
     background-color var(--dur-fast) ease,
     color var(--dur-fast) ease,
@@ -353,24 +228,10 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
   transform: translateY(1px);
 }
 
-/* --- Animasi masuk saat digulir (opsional, murni CSS) --------------------- */
-
-/* CARA PAKAI:
-     1. Jangan tulis class="reveal" langsung di index.html.
-     2. Di app.js, pakai IntersectionObserver. Saat elemen masuk viewport,
-        tambahkan class "reveal" sekaligus "is-visible".
-   Animasi hanya dipicu oleh .is-visible, jadi kalau JavaScript gagal dimuat
-   konten tetap tampil normal dan tidak pernah hilang.
-
-   SENGaja TIDAK memakai nth-child untuk stagger: filter pada #grid-kelas
-   menambah dan mengurangi kartu, sehingga delay per-indeks akan saling
-   bertabrakan dengan animasi. */
 .reveal.is-visible {
   animation: rise var(--dur-base) var(--ease-out) both;
   animation-delay: var(--reveal-delay, 0ms);
 }
-
-/* --- Scrollbar ----------------------------------------------------------- */
 
 * {
   scrollbar-width: thin;
@@ -396,22 +257,12 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
   background: var(--ink-45);
 }
 
-
-/* ============================================================================
-   7. GAYA CETAK / PDF
-   ----------------------------------------------------------------------------
-   Dipakai saat mengekspor PDF untuk laporan pengumpulan tugas.
-   ========================================================================== */
-
 @media print {
-  /* Paksa warna cetak. Tanpa ini, latar gelap footer dan CTA accent akan
-     menghabiskan tinta printer dan menutupi teks. */
   body {
     background: #fff !important;
     color: #000 !important;
   }
 
-  /* Sembunyikan elemen yang tidak berguna di atas kertas. */
   header,
   #nav-mobile,
   dialog,
@@ -420,7 +271,6 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
     display: none !important;
   }
 
-  /* Tampilkan tujuan jangkar supaya pembaca tahu tautan menuju mana. */
   a[href^="#"]::after {
     content: " (" attr(href) ")";
     font-size: 0.75em;
@@ -428,7 +278,6 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
     text-decoration: none;
   }
 
-  /* Jangan biarkan satu kartu terbelah dua halaman. */
   .card,
   #daftar-kelas,
   #daftar-mentor,
@@ -444,20 +293,12 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
     page-break-after: avoid;
   }
 
-  /* Bayangan tidak bisa direproduksi printer. */
   .card,
   .btn {
     box-shadow: none !important;
   }
 }
 
-
-/* ============================================================================
-   8. AKSESIBILITAS
-   ========================================================================== */
-
-/* Sakelar utama untuk seluruh animasi berkas ini. Dipasang paling akhir
-   supaya menimpa definisi mana pun yang muncul sebelumnya. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -472,11 +313,7 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
     scroll-behavior: auto !important;
   }
 
-  /* Dialog harus ditangani lebih tegas daripada aturan global di atas. Dengan
-     animation-fill-mode: both plus durasi 0.01ms, animasi sudah selesai
-     sebelum frame pertama sehingga @starting-style tetap terpakai dan modal
-     terlihat transparan (opacity 0). Jadi animasinya dimatikan total dan
-     state akhir ditulis eksplisit. */
+
   dialog[open],
   dialog[open]::backdrop {
     animation: none;
@@ -495,8 +332,6 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
   }
 }
 
-/* Mode kontras paksa (Windows High Contrast): sistem mengunci semua warna,
-   jadi dekorasi garis diganti batas agar bentuk komponen tetap terbaca. */
 @media (forced-colors: active) {
   .card,
   .input,
@@ -510,36 +345,19 @@ header nav[aria-label="Navigasi utama"] a:focus-visible::after {
   }
 }
 
-
-/* ============================================================================
-   9. KEAMANAN LAYOUT DI LEBAR KECIL
-   ----------------------------------------------------------------------------
-   Menjaga 390px (iPhone SE) tidak memunculkan scrollbar horizontal.
-   ========================================================================== */
-
 @media (max-width: 30rem) {
   :root {
-    /* Rampingkan offset jangkar supaya tidak memakan layar yang sempit. */
     --header-h: 3.5rem;
   }
 
-  /* Nama kelas yang sangat panjang dan nominal Rp tidak boleh memaksa
-     halaman melebar. Aturan overflow-wrap pada h1-h3 sudah menangani judul;
-   di sini khusus untuk teks mono seperti harga dan kode. */
   .font-mono {
     overflow-wrap: anywhere;
   }
 
-  /* Tombol di hero dan CTA dibiarkan membungkus, bukan meluber. */
   .btn {
     max-width: 100%;
   }
 }
-
-
-/* ============================================================================
-   10. KEYFRAMES
-   ========================================================================== */
 
 @keyframes rise {
   from {
